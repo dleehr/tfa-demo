@@ -10,8 +10,19 @@ resource "aap_host" "host" {
   }
 }
 
+data "aap_eventstream" "eventstream" {
+  id = 1
+}
+
 action "aap_eventdispatch" "event" {
   config {
-    name = "Hello World!"
+    limit = "infra"
+    job_template_id = 3
+    inventory_id = 1
+    event_stream_config = {
+      url = data.aap_eventstream.eventstream.url
+      username = "tf-user"
+      password = "terrible"
+    }
   }
 }
