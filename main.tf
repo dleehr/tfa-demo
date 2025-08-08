@@ -17,8 +17,10 @@ data "aap_eventstream" "eventstream" {
 action "aap_eventdispatch" "event" {
   config {
     limit = "infra"
-    job_template_id = 3
-    inventory_id = 1
+    template_type = "job"
+    job_template_name = "Demo Job Template"
+    organization_name = "Default"
+
     event_stream_config = {
       url = data.aap_eventstream.eventstream.url
       username = "tf-user"
