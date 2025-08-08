@@ -1,0 +1,3 @@
+aap_username = "admin"
+aap_password = ""
+aap_host = "http://localhost:44926"
