@@ -2,20 +2,30 @@
 - name: Configure AAP for Terraform Actions
   hosts: localhost
   tasks:
-    - name: Create API Token so that EDA can call Controller
-      ansible.platform.token:
-        description: 'EDA Token'
-        scope: "write"
-        state: "present"
-      register: aap_token
-    - name: Create EDA credential for controller
-      ansible.eda.credential:
+    - name: Check if EDA credential for controller exists
+      ansible.eda.credential_info:
         name: 'TF Actions EDA Credential'
-        credential_type_name: 'Red Hat Ansible Automation Platform'
-        organization_name: 'Default'
-        inputs:
-          host: 'http://myaap/api/controller'
-          oauth_token: '{{ ansible_facts.aap_token.token }}'
+      register: eda_credential
+    - block:
+      - name: Create API Token so that EDA can call Controller
+        ansible.platform.token:
+          description: 'EDA Token'
+          scope: "write"
+          state: "present"
+        register: aap_token
+      - name: Create EDA credential for controller
+        ansible.eda.credential:
+          name: 'TF Actions EDA Credential'
+          credential_type_name: 'Red Hat Ansible Automation Platform'
+          organization_name: 'Default'
+          inputs:
+            host: 'http://myaap/api/controller'
+            oauth_token: '{{ ansible_facts.aap_token.token }}'
+      when: eda_credential.credentials | length == 0
+    - name: Check if Basic Event Stream Credential exists
+      ansible.eda.credential_info:
+        name: 'TF Actions Basic Event Stream Credential'
+      register: es_credential
     - name: Create EDA credential for event stream
       ansible.eda.credential:
         name: 'TF Actions Basic Event Stream Credential'
@@ -24,6 +34,7 @@
         inputs:
           username: 'tf-user'
           password: 'terrible'
+      when: es_credential.credentials | length == 0
     - name: Create EDA Project
       ansible.eda.project:
         name: 'TF Actions Project'
