@@ -34,6 +34,7 @@
         name: 'TF Actions Event Stream'
         credential_name: 'TF Actions Basic Event Stream Credential'
         organization_name: 'Default'
+        forward_events: true
     - name: Create EDA Decision Environment
       ansible.eda.decision_environment:
         name: 'TF Actions Decision Environment'
@@ -46,7 +47,9 @@
         rulebook_name: 'tf-action-rulebook.yml'
         eda_credentials:
           - 'TF Actions EDA Credential'
-        swap_single_source: true
+        event_streams:
+          - event_stream: 'TF Actions Event Stream'
+            source_name: '__SOURCE_1'
         decision_environment_name: 'TF Actions Decision Environment'
         organization_name: 'Default'
     - name: Fetch Event Stream
