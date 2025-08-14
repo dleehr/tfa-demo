@@ -14,3 +14,14 @@ variable "aap_username" {
 variable "aap_host" {
   type = string
 }
+
+variable "event_stream_username" {
+  type    = string
+  default = "tf-user"
+  sensitive = true
+}
+
+variable "event_stream_password" {
+  type = string
+  sensitive = true
+}
