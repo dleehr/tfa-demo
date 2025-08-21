@@ -1,7 +1,37 @@
 ---
 - name: Configure AAP for Terraform Actions
   hosts: localhost
+  vars:
+    credential_names:
+      basic_event_stream: /aap-tf-actions-basic-event-stream
   tasks:
+    - block:
+      - name: Read event stream credential from vault
+        community.hashi_vault.vault_kv2_get:
+          auth_method: approle # This should be module_defaults
+          role_id: "{{ lookup('ansible.builtin.env', 'VAULT_ROLE_ID') }}"
+          secret_id: "{{ lookup('ansible.builtin.env', 'VAULT_SECRET_ID') }}"
+          path: "{{ credential_names.basic_event_stream }}"
+        register: vault_bes_credential
+      rescue:
+        - name: Create event stream credential in vault with randomly generated password
+          community.hashi_vault.vault_kv2_write:
+            auth_method: approle # This should be module_defaults
+            role_id: "{{ lookup('ansible.builtin.env', 'VAULT_ROLE_ID') }}"
+            secret_id: "{{ lookup('ansible.builtin.env', 'VAULT_SECRET_ID') }}"
+            path: "{{ credential_names.basic_event_stream }}"
+            data:
+              username: 'tf-user'
+              password: "{{ lookup('ansible.builtin.password', '/dev/null' )}}"
+        - name: Read event stream credential from vault
+          community.hashi_vault.vault_kv2_get:
+            auth_method: approle # This should be module_defaults
+            role_id: "{{ lookup('ansible.builtin.env', 'VAULT_ROLE_ID') }}"
+            secret_id: "{{ lookup('ansible.builtin.env', 'VAULT_SECRET_ID') }}"
+            path: "{{ credential_names.basic_event_stream }}"
+          register: vault_bes_credential
+    - ansible.builtin.set_fact:
+        bes_credential: "{{ vault_bes_credential.secret}}"
     - name: Check if EDA credential for controller exists
       ansible.eda.credential_info:
         name: 'TF Actions EDA Credential'
@@ -32,8 +62,8 @@
         credential_type_name: 'Basic Event Stream'
         organization_name: 'Default'
         inputs:
-          username: 'tf-user'
-          password: 'terrible'
+          username: "{{ bes_credential.username }}"
+          password: "{{ bes_credential.password }}"
       when: es_credential.credentials | length == 0
     - name: Create EDA Project
       ansible.eda.project:

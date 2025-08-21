@@ -2,3 +2,4 @@
 collections:
   - name: ansible.platform
   - name: ansible.eda
+  - name: community.hashi_vault
