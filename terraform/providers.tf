@@ -1,8 +1,27 @@
 terraform {
   required_providers {
     aap = {
+      # Overridden by local dev_overrides, provider built with alpha version of plugin-framework
       source  = "ansible/aap"
-      version = "~> 1.3.0-prerelease2"
+      version = "~> 1.3.0"
+    }
+    vault = {
+      source = "hashicorp/vault"
+      version = "5.2.1"
+    }
+  }
+}
+
+provider "vault" {
+  # VAULT_ADDR is read from environment
+  skip_child_token = true
+  namespace = var.vault_namespace
+  auth_login {
+    path = "auth/approle/login"
+
+    parameters = {
+      role_id   = var.login_approle_role_id
+      secret_id = var.login_approle_secret_id
     }
   }
 }

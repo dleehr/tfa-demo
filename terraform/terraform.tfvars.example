@@ -1,3 +1,7 @@
 aap_username = "admin"
 aap_password = ""
 aap_host = "http://localhost:44926"
+
+login_approle_role_id = ""
+login_approle_secret_id = ""
+vault_namespace = ""

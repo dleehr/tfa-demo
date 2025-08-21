@@ -15,13 +15,14 @@ variable "aap_host" {
   type = string
 }
 
-variable "event_stream_username" {
-  type    = string
-  default = "tf-user"
-  sensitive = true
-}
+# vault variables
 
-variable "event_stream_password" {
+variable login_approle_role_id {
   type = string
-  sensitive = true
+}
+variable login_approle_secret_id {
+  type = string
+}
+variable vault_namespace {
+  type = string
 }
