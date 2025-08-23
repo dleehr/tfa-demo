@@ -27,7 +27,7 @@ resource "aap_host" "host" {
 # The purpose is to look up an EDA Event Stream object by ID so that we know its URL when
 # we want to send an event later.
 data "aap_eventstream" "eventstream" {
-  id = 1
+  name = "TF Actions Event Stream"
 }
 
 # Sample output just to show that we looked up the Event Stream URL with the above datasource
