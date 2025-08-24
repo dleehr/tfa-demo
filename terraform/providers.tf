@@ -1,4 +1,5 @@
 terraform {
+  required_version = "~> v1.14.0"
   required_providers {
     aap = {
       # Overridden by local dev_overrides, provider built with alpha version of plugin-framework
