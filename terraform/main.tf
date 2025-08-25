@@ -4,12 +4,24 @@ ephemeral "vault_kv_secret_v2" "aap_event_streams_auth" {
   name = "aap-tf-actions-basic-event-stream"
 }
 
+data "aap_inventory" "inventory" {
+  name = "Demo Inventory"
+  organization_name = "Default"
+}
+
 # Create some infrastructure that has an action tied to it
+
+resource "aap_group" "infra" {
+  name = "infra"
+  inventory_id = data.aap_inventory.inventory.id
+}
+
 # TODO: Change this to launch EC2 instances and either have dependent aap_host resources
 # or dynamic inventory / inventory sync
 resource "aap_host" "host" {
   count = 5
-  inventory_id = 1
+  inventory_id = data.aap_inventory.inventory.id
+  groups = toset([resource.aap_group.infra.id])
   name         = "host-${count.index+1}"
 
   lifecycle {
