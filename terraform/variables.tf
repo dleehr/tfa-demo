@@ -17,6 +17,10 @@ variable "aap_host" {
 
 # vault variables
 
+variable vault_address {
+  type = string
+}
+
 variable login_approle_role_id {
   type = string
 }

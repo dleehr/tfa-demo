@@ -14,8 +14,8 @@ terraform {
 }
 
 provider "vault" {
-  # VAULT_ADDR is read from environment
   skip_child_token = true
+  address = var.vault_address
   namespace = var.vault_namespace
   auth_login {
     path = "auth/approle/login"

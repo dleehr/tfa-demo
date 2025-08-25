@@ -5,6 +5,7 @@ aap_host = "http://localhost:44926"
 login_approle_role_id = ""
 login_approle_secret_id = ""
 vault_namespace = ""
+vault_address = ""
 
 # until secrets are working
 aap_event_stream_username = ""
