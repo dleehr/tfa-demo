@@ -66,10 +66,8 @@ action "aap_eventdispatch" "event" {
       # error is '.event_stream_config.username: value has marks, so it cannot be serialized'
       # Have tried a bunch of things but can't get past that error. It works if I put the values
       # in as literal strings.
-#       username = nonsensitive(ephemeral.vault_kv_secret_v2.aap_event_streams_auth.data.username)
-#       password = nonsensitive(ephemeral.vault_kv_secret_v2.aap_event_streams_auth.data.password)
-      username = var.aap_event_stream_username
-      password = var.aap_event_stream_password
+      username = ephemeral.vault_kv_secret_v2.aap_event_streams_auth.data.username
+      password = ephemeral.vault_kv_secret_v2.aap_event_streams_auth.data.password
     }
   }
 }
