@@ -30,11 +30,3 @@ variable login_approle_secret_id {
 variable vault_namespace {
   type = string
 }
-
-variable aap_event_stream_username {
-  type = string
-}
-
-variable aap_event_stream_password {
-  type = string
-}

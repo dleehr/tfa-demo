@@ -1,7 +1,8 @@
 # The username/pass to use when POSTing the event to EDA's event stream URL is stored in vault
-ephemeral "vault_kv_secret_v2" "aap_event_streams_auth" {
+# Using datasource here. ephemeral is preferred but not supported with actions yet
+data "vault_kv_secret_v2" "aap_event_streams_auth" {
   mount = "secret"
-  name = "aap-tf-actions-basic-event-stream"
+  name  = "aap-tf-actions-basic-event-stream"
 }
 
 data "aap_inventory" "inventory" {
@@ -62,12 +63,8 @@ action "aap_eventdispatch" "event" {
     event_stream_config = {
       # url from the new datasource is working
       url = data.aap_eventstream.eventstream.url
-      # These values are failing whether I look them up from vars or from ephemeral.vault_kv_secret_v2
-      # error is '.event_stream_config.username: value has marks, so it cannot be serialized'
-      # Have tried a bunch of things but can't get past that error. It works if I put the values
-      # in as literal strings.
-      username = ephemeral.vault_kv_secret_v2.aap_event_streams_auth.data.username
-      password = ephemeral.vault_kv_secret_v2.aap_event_streams_auth.data.password
+      username = data.vault_kv_secret_v2.aap_event_streams_auth.data.username
+      password = data.vault_kv_secret_v2.aap_event_streams_auth.data.password
     }
   }
 }
