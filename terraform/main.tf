@@ -11,7 +11,6 @@ data "aap_inventory" "inventory" {
 }
 
 # Create some infrastructure that has an action tied to it
-
 resource "aap_group" "infra" {
   name = "infra"
   inventory_id = data.aap_inventory.inventory.id
@@ -24,6 +23,7 @@ resource "aap_host" "host" {
   inventory_id = data.aap_inventory.inventory.id
   groups = toset([resource.aap_group.infra.id])
   name         = "host-${count.index+1}"
+  variables = "ansible_connection: local"
 
   lifecycle {
     # This action trigger syntax new in terraform alpha
