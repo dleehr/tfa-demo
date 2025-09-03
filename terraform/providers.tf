@@ -3,8 +3,8 @@ terraform {
   required_providers {
     aap = {
       # Overridden by local dev_overrides, provider built with alpha version of plugin-framework
-      source  = "ansible/aap"
-      version = "~> 1.3.0"
+      source  = "dleehr/aap"
+      version = "2.0.0-demo1"
     }
     vault = {
       source = "hashicorp/vault"
